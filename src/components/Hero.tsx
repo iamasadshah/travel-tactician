@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { FaGlobeAmericas, FaArrowDown } from 'react-icons/fa';
+import { FaArrowDown } from 'react-icons/fa';
+
 
 export default function Hero() {
   return (
@@ -26,9 +27,15 @@ export default function Hero() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-center mb-6"
+          className="flex justify-center mb-2"
         >
-          <FaGlobeAmericas className="text-6xl sm:text-7xl md:text-8xl text-blue-400" />
+          <motion.img
+            src="/globe-icon.gif"
+            alt="Globe Icon"
+            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32"
+            style={{ objectFit: 'contain' }}
+            
+          />
         </motion.div>
 
         <motion.h1
@@ -37,8 +44,8 @@ export default function Hero() {
           transition={{ delay: 0.3 }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
         >
-          Your Journey
-          <span className="block text-blue-400">Begins Here</span>
+          Travel Tactician
+          {/* <span className="block text-blue-400">Begins Here</span> */}
         </motion.h1>
 
         <motion.p
@@ -47,7 +54,7 @@ export default function Hero() {
           transition={{ delay: 0.5 }}
           className="text-xl sm:text-2xl md:text-3xl text-gray-200 mb-8 max-w-3xl mx-auto"
         >
-          Let AI craft your perfect travel experience, tailored just for you
+          Smart AI travel planning that fits your style, budget, and schedule seamlessly.
         </motion.p>
 
         <motion.div
