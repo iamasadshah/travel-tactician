@@ -30,27 +30,23 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
               <span className="text-blue-400">🎯 Destination:</span>
-              <span>{itinerary.overview.destination}</span>
+              <span>{itinerary.trip_overview.destination}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-blue-400">⏱️ Duration:</span>
-              <span>{itinerary.overview.duration}</span>
+              <span>{itinerary.trip_overview.duration}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-blue-400">📅 Dates:</span>
-              <span>{itinerary.overview.startDate} - {itinerary.overview.endDate}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-blue-400">🎨 Trip Type:</span>
-              <span>{itinerary.overview.tripType}</span>
+              <span>{itinerary.trip_overview.dates}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-blue-400">💰 Budget Level:</span>
-              <span>{itinerary.overview.budgetLevel}</span>
+              <span>{itinerary.trip_overview.budget_level}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-blue-400">🏨 Accommodation:</span>
-              <span>{itinerary.overview.accommodation}</span>
+              <span>{itinerary.trip_overview.accommodation}</span>
             </div>
           </div>
         </div>
@@ -59,36 +55,36 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
           <h2 className="text-2xl font-bold flex items-center gap-2">
             📅 Day-by-Day Itinerary
           </h2>
-          {Object.entries(itinerary.dailyItinerary).map(([day, activities], index) => (
-            <div key={day} className="space-y-4 border-l-2 border-blue-400 pl-4">
-              <h3 className="text-xl font-semibold text-blue-400">{day}</h3>
+          {itinerary.itinerary.map((dayItinerary, index) => (
+            <div key={dayItinerary.day} className="space-y-4 border-l-2 border-blue-400 pl-4">
+              <h3 className="text-xl font-semibold text-blue-400">Day {dayItinerary.day}</h3>
               <div className="space-y-4">
                 <div className="space-y-2">
                   <h4 className="font-medium flex items-center gap-2">
-                    🌅 Morning ({activities.morning.time})
+                    🌅 Morning
                   </h4>
                   <ul className="list-disc list-inside pl-4 space-y-1">
-                    {activities.morning.activities.map((activity, i) => (
+                    {dayItinerary.morning.map((activity, i) => (
                       <li key={i}>{activity}</li>
                     ))}
                   </ul>
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-medium flex items-center gap-2">
-                    ☀️ Afternoon ({activities.afternoon.time})
+                    ☀️ Afternoon
                   </h4>
                   <ul className="list-disc list-inside pl-4 space-y-1">
-                    {activities.afternoon.activities.map((activity, i) => (
+                    {dayItinerary.afternoon.map((activity, i) => (
                       <li key={i}>{activity}</li>
                     ))}
                   </ul>
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-medium flex items-center gap-2">
-                    🌙 Evening ({activities.evening.time})
+                    🌙 Evening
                   </h4>
                   <ul className="list-disc list-inside pl-4 space-y-1">
-                    {activities.evening.activities.map((activity, i) => (
+                    {dayItinerary.evening.map((activity, i) => (
                       <li key={i}>{activity}</li>
                     ))}
                   </ul>
@@ -107,15 +103,14 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
               <h3 className="text-lg font-medium flex items-center gap-2">
                 🌤️ Weather
               </h3>
-              <p>{itinerary.additionalInfo.weather.forecast}</p>
-              <p>Temperature: {itinerary.additionalInfo.weather.temperature}</p>
+              <p>{itinerary.additional_info.weather_forecast}</p>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-medium flex items-center gap-2">
                 🎒 Packing Tips
               </h3>
               <ul className="list-disc list-inside pl-4">
-                {itinerary.additionalInfo.packingTips.map((tip, i) => (
+                {itinerary.additional_info.packing_tips.map((tip, i) => (
                   <li key={i}>{tip}</li>
                 ))}
               </ul>
@@ -124,16 +119,15 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
               <h3 className="text-lg font-medium flex items-center gap-2">
                 💱 Local Currency
               </h3>
-              <p>Currency: {itinerary.additionalInfo.localCurrency.code}</p>
-              <p>Exchange Rate: {itinerary.additionalInfo.localCurrency.exchangeRate}</p>
+              <p>Currency: {itinerary.additional_info.local_currency.code}</p>
+              <p>Exchange Rate: {itinerary.additional_info.local_currency.exchangeRate}</p>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-medium flex items-center gap-2">
                 🚗 Transportation
               </h3>
-              <p>From Airport: {itinerary.additionalInfo.transportation.fromAirport}</p>
               <ul className="list-disc list-inside pl-4">
-                {itinerary.additionalInfo.transportation.localTransport.map((transport, i) => (
+                {itinerary.additional_info.transportation.map((transport, i) => (
                   <li key={i}>{transport}</li>
                 ))}
               </ul>
@@ -142,10 +136,10 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
               <h3 className="text-lg font-medium flex items-center gap-2">
                 🚨 Emergency Contacts
               </h3>
-              <p>Police: {itinerary.additionalInfo.emergency.police}</p>
-              <p>Ambulance: {itinerary.additionalInfo.emergency.ambulance}</p>
-              {itinerary.additionalInfo.emergency.touristPolice && (
-                <p>Tourist Police: {itinerary.additionalInfo.emergency.touristPolice}</p>
+              <p>Police: {itinerary.additional_info.emergency.police}</p>
+              <p>Ambulance: {itinerary.additional_info.emergency.ambulance}</p>
+              {itinerary.additional_info.emergency.touristPolice && (
+                <p>Tourist Police: {itinerary.additional_info.emergency.touristPolice}</p>
               )}
             </div>
           </div>
@@ -169,27 +163,23 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
             <span className="text-blue-400">🎯 Destination:</span>
-            <span>{itinerary.overview.destination}</span>
+            <span>{itinerary.trip_overview.destination}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-blue-400">⏱️ Duration:</span>
-            <span>{itinerary.overview.duration}</span>
+            <span>{itinerary.trip_overview.duration}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-blue-400">📅 Dates:</span>
-            <span>{itinerary.overview.startDate} - {itinerary.overview.endDate}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-blue-400">🎨 Trip Type:</span>
-            <span>{itinerary.overview.tripType}</span>
+            <span>{itinerary.trip_overview.dates}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-blue-400">💰 Budget Level:</span>
-            <span>{itinerary.overview.budgetLevel}</span>
+            <span>{itinerary.trip_overview.budget_level}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-blue-400">🏨 Accommodation:</span>
-            <span>{itinerary.overview.accommodation}</span>
+            <span>{itinerary.trip_overview.accommodation}</span>
           </div>
         </div>
       </MotionSection>
@@ -204,36 +194,36 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
         <h2 className="text-2xl font-bold flex items-center gap-2">
           📅 Day-by-Day Itinerary
         </h2>
-        {Object.entries(itinerary.dailyItinerary).map(([day, activities], index) => (
-          <div key={day} className="space-y-4 border-l-2 border-blue-400 pl-4">
-            <h3 className="text-xl font-semibold text-blue-400">{day}</h3>
+        {itinerary.itinerary.map((dayItinerary, index) => (
+          <div key={dayItinerary.day} className="space-y-4 border-l-2 border-blue-400 pl-4">
+            <h3 className="text-xl font-semibold text-blue-400">Day {dayItinerary.day}</h3>
             <div className="space-y-4">
               <div className="space-y-2">
                 <h4 className="font-medium flex items-center gap-2">
-                  🌅 Morning ({activities.morning.time})
+                  🌅 Morning
                 </h4>
                 <ul className="list-disc list-inside pl-4 space-y-1">
-                  {activities.morning.activities.map((activity, i) => (
+                  {dayItinerary.morning.map((activity, i) => (
                     <li key={i}>{activity}</li>
                   ))}
                 </ul>
               </div>
               <div className="space-y-2">
                 <h4 className="font-medium flex items-center gap-2">
-                  ☀️ Afternoon ({activities.afternoon.time})
+                  ☀️ Afternoon
                 </h4>
                 <ul className="list-disc list-inside pl-4 space-y-1">
-                  {activities.afternoon.activities.map((activity, i) => (
+                  {dayItinerary.afternoon.map((activity, i) => (
                     <li key={i}>{activity}</li>
                   ))}
                 </ul>
               </div>
               <div className="space-y-2">
                 <h4 className="font-medium flex items-center gap-2">
-                  🌙 Evening ({activities.evening.time})
+                  🌙 Evening
                 </h4>
                 <ul className="list-disc list-inside pl-4 space-y-1">
-                  {activities.evening.activities.map((activity, i) => (
+                  {dayItinerary.evening.map((activity, i) => (
                     <li key={i}>{activity}</li>
                   ))}
                 </ul>
@@ -258,15 +248,14 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             <h3 className="text-lg font-medium flex items-center gap-2">
               🌤️ Weather
             </h3>
-            <p>{itinerary.additionalInfo.weather.forecast}</p>
-            <p>Temperature: {itinerary.additionalInfo.weather.temperature}</p>
+            <p>{itinerary.additional_info.weather_forecast}</p>
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-medium flex items-center gap-2">
               🎒 Packing Tips
             </h3>
             <ul className="list-disc list-inside pl-4">
-              {itinerary.additionalInfo.packingTips.map((tip, i) => (
+              {itinerary.additional_info.packing_tips.map((tip, i) => (
                 <li key={i}>{tip}</li>
               ))}
             </ul>
@@ -275,16 +264,15 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             <h3 className="text-lg font-medium flex items-center gap-2">
               💱 Local Currency
             </h3>
-            <p>Currency: {itinerary.additionalInfo.localCurrency.code}</p>
-            <p>Exchange Rate: {itinerary.additionalInfo.localCurrency.exchangeRate}</p>
+            <p>Currency: {itinerary.additional_info.local_currency.code}</p>
+            <p>Exchange Rate: {itinerary.additional_info.local_currency.exchangeRate}</p>
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-medium flex items-center gap-2">
               🚗 Transportation
             </h3>
-            <p>From Airport: {itinerary.additionalInfo.transportation.fromAirport}</p>
             <ul className="list-disc list-inside pl-4">
-              {itinerary.additionalInfo.transportation.localTransport.map((transport, i) => (
+              {itinerary.additional_info.transportation.map((transport, i) => (
                 <li key={i}>{transport}</li>
               ))}
             </ul>
@@ -293,10 +281,10 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             <h3 className="text-lg font-medium flex items-center gap-2">
               🚨 Emergency Contacts
             </h3>
-            <p>Police: {itinerary.additionalInfo.emergency.police}</p>
-            <p>Ambulance: {itinerary.additionalInfo.emergency.ambulance}</p>
-            {itinerary.additionalInfo.emergency.touristPolice && (
-              <p>Tourist Police: {itinerary.additionalInfo.emergency.touristPolice}</p>
+            <p>Police: {itinerary.additional_info.emergency.police}</p>
+            <p>Ambulance: {itinerary.additional_info.emergency.ambulance}</p>
+            {itinerary.additional_info.emergency.touristPolice && (
+              <p>Tourist Police: {itinerary.additional_info.emergency.touristPolice}</p>
             )}
           </div>
         </div>

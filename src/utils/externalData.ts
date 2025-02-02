@@ -106,7 +106,7 @@ function extractCountry(destination: string): string {
 export async function getDestinationData(destination: string): Promise<DestinationData> {
   try {
     // Get weather data
-    const weatherApiKey = process.env.NEXT_PUBLIC_WEATHERAPI_KEY;
+    const weatherApiKey = process.env.NEXT_PUBLIC_WEATHERAPI;
     if (!weatherApiKey) {
       throw new Error('Weather API key not configured');
     }
@@ -124,7 +124,7 @@ export async function getDestinationData(destination: string): Promise<Destinati
       formattedRate = 'Same currency (USD)';
     } else {
       try {
-        const exchangeApiKey = process.env.NEXT_PUBLIC_EXCHANGERATE_API_KEY;
+        const exchangeApiKey = process.env.NEXT_PUBLIC_EXCHANGERATE_API;
         if (!exchangeApiKey) {
           throw new Error('Exchange rate API key not configured');
         }

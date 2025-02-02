@@ -2,36 +2,25 @@
 
 import { useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
-import TravelForm from '@/components/TravelForm';
-import TripPlan from '@/components/TripPlan';
+import MultiStepForm from '@/components/MultiStepForm';
+import ItineraryDisplay from '@/components/ItineraryDisplay';
 import Hero from '@/components/Hero';
 import BackgroundAnimation from '@/components/BackgroundAnimation';
 import { generateTripPlan } from '@/utils/gemini';
-
-interface TripFormData {
-  destination: string;
-  duration: string;
-  budget: number;
-  interests: string[];
-  travelStyle: string;
-  accommodation: string;
-  email: string;
-  numberOfTravelers: number;
-  dietaryPreferences: string;
-}
+import { FormData, TravelItinerary } from '@/types/itinerary';
 
 export default function Home() {
-  const [tripPlan, setTripPlan] = useState('');
+  const [itinerary, setItinerary] = useState<TravelItinerary | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (formData: TripFormData) => {
+  const handleSubmit = async (formData: FormData) => {
     try {
       setIsLoading(true);
-      const plan = await generateTripPlan(formData);
-      setTripPlan(plan);
-      toast.success('Trip plan generated successfully!');
+      const generatedItinerary = await generateTripPlan(formData);
+      setItinerary(generatedItinerary);
+      toast.success('Trip itinerary generated successfully!');
     } catch (error) {
-      toast.error('Failed to generate trip plan. Please try again.');
+      toast.error('Failed to generate itinerary. Please try again.');
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -49,12 +38,23 @@ export default function Home() {
       </section>
 
       {/* Form Section */}
-      <section className="relative z-10 py-16 lg:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto space-y-16">
-            <TravelForm onSubmit={handleSubmit} />
-            <TripPlan plan={tripPlan} isLoading={isLoading} />
-          </div>
+      <section className="relative py-12 px-4">
+        <div className="container mx-auto">
+          {!itinerary ? (
+            <MultiStepForm onSubmit={handleSubmit} isLoading={isLoading} />
+          ) : (
+            <div className="space-y-6">
+              <ItineraryDisplay itinerary={itinerary} />
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setItinerary(null)}
+                  className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                >
+                  Create New Itinerary
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </main>

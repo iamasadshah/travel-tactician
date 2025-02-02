@@ -1,42 +1,31 @@
-export interface DayActivity {
-  morning: {
-    activities: string[];
-    time: string;
-  };
-  afternoon: {
-    activities: string[];
-    time: string;
-  };
-  evening: {
-    activities: string[];
-    time: string;
-  };
-}
-
 export interface TripOverview {
   destination: string;
+  dates: string;
   duration: string;
-  startDate: string;
-  endDate: string;
-  tripType: string;
-  budgetLevel: string;
+  budget_level: 'Budget' | 'Mid-range' | 'Luxury';
   accommodation: string;
+  travelers: string;
+  dietary_plan: string;
+}
+
+export interface DayActivity {
+  morning: string[];
+  afternoon: string[];
+  evening: string[];
+}
+
+export interface DayItinerary extends DayActivity {
+  day: number;
 }
 
 export interface AdditionalInfo {
-  weather: {
-    forecast: string;
-    temperature: string;
-  };
-  packingTips: string[];
-  localCurrency: {
+  weather_forecast: string;
+  packing_tips: string[];
+  local_currency: {
     code: string;
-    exchangeRate: string;
+    exchangeRate: number;
   };
-  transportation: {
-    fromAirport: string;
-    localTransport: string[];
-  };
+  transportation: string[];
   emergency: {
     police: string;
     ambulance: string;
@@ -45,19 +34,23 @@ export interface AdditionalInfo {
 }
 
 export interface TravelItinerary {
-  overview: TripOverview;
-  dailyItinerary: Record<string, DayActivity>;
-  additionalInfo: AdditionalInfo;
+  trip_overview: TripOverview;
+  itinerary: DayItinerary[];
+  additional_info: AdditionalInfo;
 }
 
-export interface TripFormData {
+export interface FormStep {
+  id: number;
+  title: string;
+  description: string;
+}
+
+export type FormData = {
   destination: string;
-  duration: string;
-  budget: number;
-  interests: string[];
-  travelStyle: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  budget: string;
   accommodation: string;
-  email: string;
-  numberOfTravelers: number;
-  dietaryPreferences: string[];
+  travelers: string;
+  dietaryPlan: string;
 }
