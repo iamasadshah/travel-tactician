@@ -10,12 +10,6 @@ interface WeatherResponse {
   };
 }
 
-interface ExchangeRateResponse {
-  data: {
-    [key: string]: number;
-  };
-}
-
 interface DestinationData {
   weather: {
     forecast: string;
@@ -124,21 +118,13 @@ export async function getDestinationData(destination: string): Promise<Destinati
       formattedRate = 'Same currency (USD)';
     } else {
       try {
-        const exchangeApiKey = process.env.NEXT_PUBLIC_EXCHANGERATE_API;
-        if (!exchangeApiKey) {
-          throw new Error('Exchange rate API key not configured');
-        }
-
-        // Using exchangerate-api.com instead as it has better PKR support
-        const exchangeResponse = await axios.get(
-          `https://v6.exchangerate-api.com/v6/${exchangeApiKey}/pair/USD/${currencyCode}`
-        );
-
-        if (!exchangeResponse.data || !exchangeResponse.data.conversion_rate) {
+        const exchangeResponse = await axios.get(`/api/exchange-rate?currency=${currencyCode}`);
+        
+        if (!exchangeResponse.data || !exchangeResponse.data.rate) {
           console.error('Failed to get exchange rate:', exchangeResponse.data);
           formattedRate = `Exchange rate unavailable for ${currencyCode}`;
         } else {
-          const rate = exchangeResponse.data.conversion_rate;
+          const rate = exchangeResponse.data.rate;
           formattedRate = `1 USD = ${rate.toFixed(2)} ${currencyCode}`;
         }
       } catch (error) {

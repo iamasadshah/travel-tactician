@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { TravelItinerary, FormData } from '@/types/itinerary';
+import { TravelItinerary, FormData, TripOverview } from '@/types/itinerary';
 import { getDestinationData } from './externalData';
 
 // Make sure to use the correct environment variable
@@ -22,75 +22,128 @@ export async function generateTripPlan(formData: FormData): Promise<TravelItiner
 
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-    const prompt = `Generate a detailed travel itinerary for the following trip:
-Destination: ${formData.destination}
-Dates: ${formData.startDate?.toLocaleDateString()} - ${formData.endDate?.toLocaleDateString()}
-Budget Level: ${formData.budget}
-Accommodation: ${formData.accommodation}
-Number of Travelers: ${formData.travelers}
-Dietary Preferences: ${formData.dietaryPlan}
+    const prompt = `You are a travel planning assistant. Your task is to generate a detailed travel itinerary in valid JSON format.
+Please follow these requirements exactly:
 
-Please provide a structured travel itinerary that includes:
-1. A trip overview with all the above details
-2. A day-by-day itinerary with activities for morning, afternoon, and evening
-3. Additional information including weather forecast, packing tips, local currency, transportation options, and emergency contacts
-
-The response should be in a structured JSON format matching this TypeScript interface:
-
-interface TravelItinerary {
-  trip_overview: {
-    destination: string;
-    dates: string;
-    duration: string;
-    budget_level: string;
-    accommodation: string;
-    travelers: string;
-    dietary_plan: string;
-  };
-  itinerary: Array<{
-    day: number;
-    morning: string[];
-    afternoon: string[];
-    evening: string[];
-  }>;
-  additional_info: {
-    weather_forecast: string;
-    packing_tips: string[];
-    local_currency: {
-      code: string;
-      exchangeRate: string;
-    };
-    transportation: string[];
-    emergency: {
-      police: string;
-      ambulance: string;
-      touristPolice: string | undefined;
-    };
-  };
+1. Return ONLY the JSON object, no additional text or explanations
+2. The JSON must exactly match this structure:
+{
+  "trip_overview": {
+    "destination": "string",
+    "dates": "string",
+    "duration": "string",
+    "budget_level": "string",
+    "accommodation": "string",
+    "travelers": "string",
+    "dietary_plan": "string"
+  },
+  "itinerary": [
+    {
+      "day": number,
+      "morning": ["string"],
+      "afternoon": ["string"],
+      "evening": ["string"]
+    }
+  ],
+  "additional_info": {
+    "weather_forecast": "string",
+    "packing_tips": ["string"],
+    "local_currency": {
+      "code": "string",
+      "exchangeRate": "string"
+    },
+    "transportation": ["string"],
+    "emergency": {
+      "police": "string",
+      "ambulance": "string",
+      "touristPolice": "string"
+    }
+  }
 }
 
-Please ensure all activities are appropriate for the specified budget level and number of travelers.
-Include emoji icons where appropriate for better readability.
-Make sure all dining recommendations align with the specified dietary preferences.
-Ensure the itinerary is properly paced and includes a mix of activities.`;
+Trip details to use:
+- Destination: ${formData.destination}
+- Dates: ${formData.startDate?.toLocaleDateString()} - ${formData.endDate?.toLocaleDateString()}
+- Budget Level: ${formData.budget}
+- Accommodation: ${formData.accommodation}
+- Number of Travelers: ${formData.travelers}
+- Dietary Preferences: ${formData.dietaryPlan}
+
+Requirements:
+- All activities should match the budget level and number of travelers
+- Include emoji icons for better readability
+- Dining recommendations should match dietary preferences
+- Include a mix of activities
+- Ensure all required fields are present and properly formatted`;
 
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
       
-      console.log('Raw AI response:', text);  
+     
+
+      // Function to extract and validate JSON
+      function extractJSON(str: string): string {
+        // Remove any leading/trailing whitespace and common text markers
+        str = str.trim().replace(/```json\s*|\s*```/g, '');
+        
+        try {
+          // First attempt: Try to parse the entire string
+          JSON.parse(str);
+          return str;
+        } catch {
+          
+          try {
+            // Second attempt: Find the largest JSON-like substring
+            const matches = str.match(/\{(?:[^{}]|(\{[^{}]*\}))*\}/g);
+            if (!matches) {
+              console.error('No JSON-like structure found in:', str);
+              throw new Error('No valid JSON object found in the response');
+            }
+            
+            // Find the largest matching substring
+            const jsonStr = matches.reduce((a, b) => a.length > b.length ? a : b);
+            
+            // Validate that it can be parsed
+            JSON.parse(jsonStr);
+            return jsonStr;
+          } catch (error) {
+            console.error('Second parse attempt failed:', error);
+            console.error('Failed text:', str);
+            throw new Error('Failed to extract valid JSON from the response');
+          }
+        }
+      }
+
+      // Extract and validate JSON
+      const jsonStr = extractJSON(text);
       
-      // Extract the JSON object from the response
-      const jsonStr = text.substring(
-        text.indexOf('{'),
-        text.lastIndexOf('}') + 1
-      );
-      
-      console.log('Extracted JSON:', jsonStr);  
-      
-      const itinerary: TravelItinerary = JSON.parse(jsonStr);
-      
+
+      let itinerary: TravelItinerary;
+      try {
+        itinerary = JSON.parse(jsonStr);
+        
+        // Detailed validation of the structure
+       
+        if (!itinerary.trip_overview) throw new Error('Missing trip_overview');
+        if (!Array.isArray(itinerary.itinerary)) throw new Error('Missing or invalid itinerary array');
+        if (!itinerary.additional_info) throw new Error('Missing additional_info');
+        
+        // Validate trip_overview fields
+        const requiredOverviewFields = ['destination', 'dates', 'duration', 'budget_level', 'accommodation', 'travelers', 'dietary_plan'] as const;
+        for (const field of requiredOverviewFields) {
+          if (!itinerary.trip_overview[field as keyof TripOverview]) {
+            throw new Error(`Missing required field in trip_overview: ${field}`);
+          }
+        }
+        
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        console.error('Attempted to parse:', jsonStr);
+        throw new Error(`Failed to parse the itinerary JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+      }
+
       // Override the real-time data to ensure accuracy
       itinerary.additional_info.weather_forecast = destinationData.weather.forecast;
       itinerary.additional_info.local_currency = {

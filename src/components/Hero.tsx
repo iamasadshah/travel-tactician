@@ -1,10 +1,10 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { FaArrowDown } from 'react-icons/fa';
+import Image from 'next/image';
 
 // Dynamically import motion components with ssr disabled
 const MotionDiv = dynamic(() => import('framer-motion').then((mod) => mod.motion.div), { ssr: false });
-const MotionImg = dynamic(() => import('framer-motion').then((mod) => mod.motion.img), { ssr: false });
 const MotionH1 = dynamic(() => import('framer-motion').then((mod) => mod.motion.h1), { ssr: false });
 const MotionP = dynamic(() => import('framer-motion').then((mod) => mod.motion.p), { ssr: false });
 
@@ -30,10 +30,11 @@ export default function Hero() {
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center mb-2">
-            <img
+            <Image
               src="/globe-icon.gif"
               alt="Globe Icon"
-              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32"
+              width={32}
+              height={32}
               style={{ objectFit: 'contain' }}
             />
           </div>
@@ -76,10 +77,11 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
           className="flex justify-center mb-2"
         >
-          <MotionImg
+          <Image
             src="/globe-icon.gif"
             alt="Globe Icon"
-            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32"
+            width={32}
+            height={32}
             style={{ objectFit: 'contain' }}
           />
         </MotionDiv>

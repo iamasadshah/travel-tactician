@@ -1,10 +1,6 @@
 import { TravelItinerary } from '@/types/itinerary';
-import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-
-// Dynamically import motion components with ssr disabled
-const MotionDiv = dynamic(() => import('framer-motion').then((mod) => mod.motion.div), { ssr: false });
-const MotionSection = dynamic(() => import('framer-motion').then((mod) => mod.motion.section), { ssr: false });
 
 interface StructuredItineraryProps {
   itinerary: TravelItinerary;
@@ -55,7 +51,7 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
           <h2 className="text-2xl font-bold flex items-center gap-2">
             📅 Day-by-Day Itinerary
           </h2>
-          {itinerary.itinerary.map((dayItinerary, index) => (
+          {itinerary.itinerary.map((dayItinerary) => (
             <div key={dayItinerary.day} className="space-y-4 border-l-2 border-blue-400 pl-4">
               <h3 className="text-xl font-semibold text-blue-400">Day {dayItinerary.day}</h3>
               <div className="space-y-4">
@@ -111,7 +107,7 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
               </h3>
               <ul className="list-disc list-inside pl-4">
                 {itinerary.additional_info.packing_tips.map((tip, i) => (
-                  <li key={i}>{tip}</li>
+                  <li key={i} className="text-gray-300">{tip}</li>
                 ))}
               </ul>
             </div>
@@ -152,7 +148,7 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
   return (
     <div className="space-y-8 bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
       {/* Trip Overview Section */}
-      <MotionSection
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="space-y-4"
@@ -182,10 +178,10 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             <span>{itinerary.trip_overview.accommodation}</span>
           </div>
         </div>
-      </MotionSection>
+      </motion.section>
 
       {/* Day-by-Day Itinerary Section */}
-      <MotionSection
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
@@ -194,8 +190,8 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
         <h2 className="text-2xl font-bold flex items-center gap-2">
           📅 Day-by-Day Itinerary
         </h2>
-        {itinerary.itinerary.map((dayItinerary, index) => (
-          <div key={dayItinerary.day} className="space-y-4 border-l-2 border-blue-400 pl-4">
+        {itinerary.itinerary.map((dayItinerary) => (
+          <div key={dayItinerary.day} className="mb-8">
             <h3 className="text-xl font-semibold text-blue-400">Day {dayItinerary.day}</h3>
             <div className="space-y-4">
               <div className="space-y-2">
@@ -231,10 +227,10 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             </div>
           </div>
         ))}
-      </MotionSection>
+      </motion.section>
 
       {/* Additional Information Section */}
-      <MotionSection
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
@@ -256,7 +252,7 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             </h3>
             <ul className="list-disc list-inside pl-4">
               {itinerary.additional_info.packing_tips.map((tip, i) => (
-                <li key={i}>{tip}</li>
+                <li key={i} className="text-gray-300">{tip}</li>
               ))}
             </ul>
           </div>
@@ -288,7 +284,7 @@ export default function StructuredItinerary({ itinerary }: StructuredItineraryPr
             )}
           </div>
         </div>
-      </MotionSection>
+      </motion.section>
     </div>
   );
 }
