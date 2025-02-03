@@ -1,8 +1,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export default function BackgroundAnimation() {
+  const [dots, setDots] = useState<Array<{ x: number; y: number }>>([]);
+
+  useEffect(() => {
+    const newDots = Array.from({ length: 10 }).map(() => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight
+    }));
+    setDots(newDots);
+  }, []);
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
       {/* Background gradient */}
@@ -34,23 +45,17 @@ export default function BackgroundAnimation() {
         />
       </svg>
 
-      {/* Glowing dots - reduced number for better performance */}
-      {Array.from({ length: 10 }).map((_, i) => (
+      {/* Glowing dots */}
+      {dots.map((dot, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-navy-light rounded-full"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: 0
-          }}
-          animate={{
-            opacity: [0, 0.4, 0]
-          }}
+          initial={{ x: dot.x, y: dot.y, opacity: 0 }}
+          animate={{ opacity: [0, 0.4, 0] }}
           transition={{
             duration: 4,
             repeat: Infinity,
-            delay: Math.random() * 2,
+            delay: i * 0.2,
             ease: "easeInOut"
           }}
         />

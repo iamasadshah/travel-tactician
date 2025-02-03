@@ -1,26 +1,30 @@
-import { motion } from 'framer-motion';
-import { FaRobot, FaBolt, FaWallet, FaShare } from 'react-icons/fa';
+import { motion } from "framer-motion";
+import { FaRobot, FaBolt, FaWallet, FaShare } from "react-icons/fa";
 
 const features = [
   {
     icon: <FaRobot />,
-    title: 'AI-Powered Customization',
-    description: 'Get personalized travel plans based on your unique preferences and interests',
+    title: "AI-Powered Customization",
+    description:
+      "Get personalized travel plans based on your unique preferences and interests",
   },
   {
     icon: <FaBolt />,
-    title: 'Instant & Hassle-Free',
-    description: 'Skip hours of research with ready-made, AI-generated travel plans',
+    title: "Instant & Hassle-Free",
+    description:
+      "Skip hours of research with ready-made, AI-generated travel plans",
   },
   {
     icon: <FaWallet />,
-    title: 'Luxury & Budget Options',
-    description: 'Find the perfect balance of experiences for your travel style and budget',
+    title: "Luxury & Budget Options",
+    description:
+      "Find the perfect balance of experiences for your travel style and budget",
   },
   {
     icon: <FaShare />,
-    title: 'Editable & Shareable',
-    description: 'Easily customize your itinerary and share it with travel companions',
+    title: "Editable & Shareable",
+    description:
+      "Easily customize your itinerary and share it with travel companions",
   },
 ];
 
@@ -68,7 +72,7 @@ export default function Features() {
             <motion.div
               key={feature.title}
               variants={itemVariants}
-              className="luxury-card group hover:bg-navy-light/30"
+              className="luxury-card group text-gold hover:bg-navy-light/30"
             >
               <div className="text-3xl mb-4 text-gold group-hover:scale-110 transform transition-transform">
                 {feature.icon}

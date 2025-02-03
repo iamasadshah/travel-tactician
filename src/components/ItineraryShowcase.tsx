@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Image from 'next/image';
 
 const sampleItineraries = [
   {
@@ -76,10 +77,12 @@ export default function ItineraryShowcase() {
           >
             <div className="grid md:grid-cols-2 gap-8">
               <div className="relative h-64 md:h-full rounded-lg overflow-hidden">
-                <img
+                <Image
                   src={sampleItineraries[currentIndex].image}
                   alt={sampleItineraries[currentIndex].destination}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  width={400}
+                  height={300}
+                  className="w-full h-64 object-cover rounded-lg shadow-lg"
                 />
               </div>
               <div>

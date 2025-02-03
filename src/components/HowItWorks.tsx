@@ -59,7 +59,7 @@ export default function HowItWorks() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12"
         >
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <motion.div
               key={step.title}
               variants={itemVariants}

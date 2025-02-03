@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FaStar } from 'react-icons/fa';
+import Image from 'next/image';
 
 const testimonials = [
   {
@@ -73,10 +74,12 @@ export default function Testimonials() {
             >
               <div className="mb-4 relative">
                 <div className="w-16 h-16 rounded-full overflow-hidden mx-auto">
-                  <img
+                  <Image
                     src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-full h-full object-cover"
+                    alt={`${testimonial.name}'s profile picture`}
+                    width={64}
+                    height={64}
+                    className="w-16 h-16 rounded-full object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-navy px-3 py-1 rounded-full">
@@ -91,7 +94,7 @@ export default function Testimonials() {
                 <h3 className="font-bold text-lg text-gold">{testimonial.name}</h3>
                 <p className="text-white/70 text-sm">{testimonial.role}</p>
               </div>
-              <p className="text-white/90 text-center italic flex-grow">"{testimonial.text}"</p>
+              <p className="text-gray-600 mb-4">&ldquo;{testimonial.text}&rdquo;</p>
             </motion.div>
           ))}
         </motion.div>
