@@ -64,6 +64,7 @@ export default function Hero() {
           >
             Get a personalized, AI-generated itinerary for your dream vacation in seconds.
           </motion.p>
+          <p className="text-center mt-4 text-sm text-white/60">Retry if an error occurs; the app is in testing mode.</p>
 
           <motion.div
             initial={{ opacity: 0 }}
